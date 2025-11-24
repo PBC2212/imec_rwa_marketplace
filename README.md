@@ -1,6 +1,6 @@
 # IMEC RWA Marketplace
 
-Complete Real World Asset (RWA) tokenization marketplace platform with Hyperledger Fabric 2.5.0 integration.
+Complete Real World Asset (RWA) tokenization marketplace platform with Hyperledger Fabric 2.2+ integration.
 
 ## 🏗 Architecture
 

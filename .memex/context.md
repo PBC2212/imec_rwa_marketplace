@@ -3,10 +3,50 @@
 ## Project Overview
 
 This is a **complete Real World Asset (RWA) tokenization marketplace** built with:
-- **Backend:** Express.js with Hyperledger Fabric SDK v2.5
+- **Backend:** Express.js with Hyperledger Fabric SDK v2.2
 - **Frontend:** Next.js 14 with TypeScript and Tailwind CSS
-- **Blockchain:** Hyperledger Fabric 2.5.0 as authoritative ledger
-- **Status:** Production-ready, 56 files, fully documented
+- **Blockchain:** Hyperledger Fabric 2.2+ as authoritative ledger
+- **Status:** Production-ready, 60+ files, fully documented
+
+## NEW: Landing Page & Authentication
+
+### Landing Page Structure
+- **URL:** `/` (root)
+- **Purpose:** Public-facing landing page with company information and login portals
+- **Sections:**
+  1. Hero section with platform access buttons
+  2. About Us - Company mission and statistics
+  3. RWA Investing explanation
+  4. Contact information with phone: (248) 678-4819 and email: info@imecapitaltokenization.com
+  5. Footer with links
+
+### Login System
+**Three login types:**
+1. **Investor Login** → Routes to `/invest`
+2. **User Login** → Routes to `/portfolio`
+3. **Admin Login** → Routes to `/admin`
+
+**Implementation:**
+- LoginModal component (`frontend/src/components/LoginModal.tsx`)
+- Client-side auth stored in localStorage
+- Redirects to appropriate dashboard based on role
+
+### Page Routing
+```
+/ (root)                    → Landing page (NEW)
+/marketplace                → Asset marketplace (original home page)
+/invest                     → Investor portal
+/portfolio                  → User/investor portfolio
+/admin                      → Admin dashboard
+/admin/assets               → Asset management
+/asset/[id]                 → Asset detail page
+```
+
+## Contact Information (Official)
+- **Phone:** (248) 678-4819
+- **Email:** info@imecapitaltokenization.com
+- **Company:** IMEC Capital Tokenization
+- **Hours:** Monday-Friday, 9:00 AM - 6:00 PM EST
 
 ## Critical Architecture Patterns
 
@@ -33,8 +73,15 @@ rwa_token_marketplace/
 ├── frontend/
 │   └── src/
 │       ├── app/              # Next.js App Router pages
-│       ├── lib/              # API client, utilities
+│       │   ├── page.tsx      # Landing page (NEW)
+│       │   ├── marketplace/  # Asset marketplace
+│       │   ├── invest/       # Investor portal
+│       │   ├── portfolio/    # Portfolio view
+│       │   ├── admin/        # Admin dashboard
+│       │   └── asset/[id]/   # Asset details
 │       ├── components/       # React components
+│       │   └── LoginModal.tsx # Login modal component
+│       ├── lib/              # API client, utilities
 │       └── hooks/            # Custom hooks
 ```
 
@@ -97,8 +144,24 @@ await chaincode.getAsset(assetId);
 
 ### 4. Authentication Pattern
 
-**API Key Based (Simple but Effective):**
+**Frontend Authentication (NEW):**
+```typescript
+// Login process
+const userData = {
+  username: formData.username,
+  type: loginType, // 'admin' | 'investor' | 'user'
+  loggedIn: true,
+  loginTime: new Date().toISOString(),
+};
+localStorage.setItem('user', JSON.stringify(userData));
 
+// Route based on user type
+if (loginType === 'admin') router.push('/admin');
+else if (loginType === 'investor') router.push('/invest');
+else router.push('/portfolio');
+```
+
+**Backend API Key Authentication:**
 ```javascript
 // Middleware usage
 const { authenticateAdmin } = require('../middleware/auth');
@@ -133,27 +196,19 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api
 NEXT_PUBLIC_API_KEY=same-as-backend-auth-api-key
 ```
 
-### 6. Fabric Connection Profile Pattern
+### 6. Fabric SDK Version (IMPORTANT)
 
-**connection-org1.json structure:**
+**Correct versions:**
 ```json
-{
-  "peers": {
-    "peer0.org1.example.com": {
-      "url": "grpcs://YOUR_PEER_HOST:PORT",
-      "tlsCACerts": { "pem": "ACTUAL_CERT_HERE" }
-    }
-  },
-  "certificateAuthorities": {
-    "ca.org1.example.com": {
-      "url": "https://YOUR_CA_HOST:PORT",
-      "tlsCACerts": { "pem": "ACTUAL_CERT_HERE" }
-    }
-  }
-}
+"fabric-network": "^2.2.20",
+"fabric-ca-client": "^2.2.20"
 ```
 
-**Must have REAL certificates, not placeholders!**
+**DO NOT use:**
+- Version 2.5.0 (doesn't exist)
+- DO NOT run `npm audit fix --force` (will downgrade to 1.4.20 and break everything)
+
+**Security vulnerabilities in jsrsasign are acceptable** - see SECURITY_NOTES.md
 
 ### 7. Data Flow Pattern
 
@@ -205,6 +260,7 @@ res.json({
 - Backend: `.js` files (CommonJS)
 - Frontend: `.tsx` for pages/components, `.ts` for utilities
 - Config files: lowercase with hyphens
+- Components: PascalCase (e.g., `LoginModal.tsx`)
 
 ### 5. Import Pattern
 Backend (CommonJS):
@@ -217,6 +273,7 @@ Frontend (ES Modules):
 ```typescript
 import { api } from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
+import LoginModal from '@/components/LoginModal';
 ```
 
 ## Security Rules
@@ -240,6 +297,11 @@ import { formatCurrency } from '@/lib/utils';
 - Set specific origins in production
 - Never use `*` wildcard in production
 
+### 5. npm Security
+- **DO NOT run `npm audit fix --force`** - it will break the project
+- Accept the 4 jsrsasign vulnerabilities (see SECURITY_NOTES.md)
+- For production: use `npm ci --only=production`
+
 ## Development Workflow
 
 ### Initial Setup Sequence:
@@ -250,6 +312,18 @@ import { formatCurrency } from '@/lib/utils';
 5. Start: `.\start.ps1` or `./start.sh`
 
 ### Making Changes:
+
+#### Adding New Page:
+1. Create in `frontend/src/app/[path]/page.tsx`
+2. Add navigation links in landing page or nav component
+3. Use API client from `@/lib/api`
+4. Follow existing page patterns
+
+#### Adding New Component:
+1. Create in `frontend/src/components/ComponentName.tsx`
+2. Use PascalCase naming
+3. Export as default
+4. Import where needed
 
 #### Adding New API Endpoint:
 1. Add route handler in appropriate file (`routes/public.js`, `routes/admin.js`, etc.)
@@ -262,12 +336,6 @@ import { formatCurrency } from '@/lib/utils';
 2. Add wrapper in `backend/src/fabric/chaincode.js`
 3. Create API endpoint using the wrapper
 4. Update frontend to use new endpoint
-
-#### Adding New Frontend Page:
-1. Create in `frontend/src/app/[path]/page.tsx`
-2. Add navigation links
-3. Use API client from `@/lib/api`
-4. Follow existing page patterns
 
 ### Testing Pattern:
 1. Test Fabric connection: `node -e "const gateway = require('./src/fabric/gateway'); gateway.connect('admin').then(() => console.log('✓ Connected'))"`
@@ -288,6 +356,8 @@ import { formatCurrency } from '@/lib/utils';
 8. Forget to clear cache after updates
 9. Mix CommonJS and ES modules
 10. Store secrets in code
+11. Run `npm audit fix --force`
+12. Use Fabric SDK version 2.5.0 or 1.4.20
 
 ### ✅ DO:
 1. Always go through Fabric for blockchain data
@@ -300,6 +370,8 @@ import { formatCurrency } from '@/lib/utils';
 8. Use TypeScript types in frontend
 9. Follow authentication patterns
 10. Keep documentation updated
+11. Use Fabric SDK 2.2.20
+12. Accept jsrsasign vulnerabilities
 
 ## Deployment Checklist
 
@@ -315,6 +387,8 @@ import { formatCurrency } from '@/lib/utils';
 - [ ] Configure monitoring
 - [ ] Test all API endpoints
 - [ ] Verify wallet backup strategy
+- [ ] Test all three login types (admin, user, investor)
+- [ ] Verify contact information is correct
 
 ## Documentation Structure
 
@@ -325,6 +399,9 @@ All documentation follows this pattern:
 - **CHAINCODE_REFERENCE.md** - Blockchain specs
 - **PROJECT_SUMMARY.md** - Architecture overview
 - **CHECKLIST.md** - Setup/deployment checklists
+- **SECURITY_NOTES.md** - Security vulnerabilities explanation
+- **VERSION_NOTES.md** - Fabric SDK version info
+- **FIXES_APPLIED.md** - Bug fixes log
 
 When adding features, update relevant documentation.
 
@@ -332,8 +409,8 @@ When adding features, update relevant documentation.
 
 ### Backend:
 - `express` - Web framework
-- `fabric-network` - Hyperledger Fabric SDK
-- `fabric-ca-client` - CA operations
+- `fabric-network@^2.2.20` - Hyperledger Fabric SDK ⚠️ EXACT VERSION
+- `fabric-ca-client@^2.2.20` - CA operations ⚠️ EXACT VERSION
 - `axios` - HTTP client
 - `cors`, `helmet`, `morgan` - Middleware
 
@@ -346,20 +423,26 @@ When adding features, update relevant documentation.
 
 ## Project-Specific Patterns
 
-### 1. Token Configuration
+### 1. Landing Page Pattern
+- Root URL (`/`) is public landing page
+- Three login types with role-based routing
+- Contact info: (248) 678-4819, info@imecapitaltokenization.com
+- Sections: Hero, About, RWA Info, Contact, Footer
+
+### 2. Token Configuration
 Default token: `IMEC` (symbol), configurable via environment
 
-### 2. Channel and Chaincode Names
+### 3. Channel and Chaincode Names
 - Default channel: `mychannel`
 - Default chaincode: `imecChaincode`
 - Configurable via `FABRIC_CHANNEL_NAME`, `FABRIC_CHAINCODE_NAME`
 
-### 3. Sync Service Pattern
+### 4. Sync Service Pattern
 - Runs periodically (default: 5 minutes)
 - Pulls from Fabric → Syncs to Spydra → Generates feed → Pushes to markets
 - Start with: `npm run sync:continuous`
 
-### 4. Market Integration Pattern
+### 5. Market Integration Pattern
 All market services follow same interface:
 ```javascript
 class MarketService {
@@ -369,7 +452,7 @@ class MarketService {
 }
 ```
 
-### 5. Feed Generation Pattern
+### 6. Feed Generation Pattern
 - Source: Fabric ledger (authoritative)
 - Output: `public/feed.json`
 - Format: Versioned JSON with stats, assets, tokens
@@ -387,6 +470,8 @@ class MarketService {
 8. **Cache invalidation** - Clear cache after any state change
 9. **Error handling** - Every async operation needs try-catch
 10. **Testing** - Always test with real Fabric network, not mocks
+11. **Fabric SDK version** - Must be 2.2.20, not 2.5.0 or 1.4.20
+12. **Landing page is root** - `/` is landing, `/marketplace` is old home page
 
 ## Quick Reference Commands
 
@@ -419,10 +504,13 @@ docker-compose down      # Stop containers
 pm2 start ecosystem.config.js  # Start
 pm2 logs                       # View logs
 pm2 restart all                # Restart
+
+# NEVER RUN
+npm audit fix --force    # ❌ DO NOT RUN - breaks Fabric SDK
 ```
 
 ---
 
-**Last Updated:** November 23, 2025  
+**Last Updated:** November 24, 2025  
 **Project Status:** ✅ Complete and Production Ready  
-**Total Files:** 56 | **Lines of Code:** ~6,000+
+**Total Files:** 60+ | **Lines of Code:** ~7,000+
