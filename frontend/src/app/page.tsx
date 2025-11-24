@@ -25,8 +25,13 @@ export default function LandingPage() {
       <header className="bg-white shadow-sm fixed w-full top-0 z-50">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-primary-600">IMEC Capital</h1>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/logo.png" 
+                alt="IME Capital Trust" 
+                className="h-12 w-12"
+              />
+              <h1 className="text-2xl font-bold text-primary-600">IME Capital Trust</h1>
             </div>
             <div className="hidden md:flex space-x-8">
               <a href="#home" className="text-gray-700 hover:text-primary-600 transition">Home</a>
@@ -61,7 +66,7 @@ export default function LandingPage() {
                 Tokenize Real World Assets with Blockchain Technology
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Unlock liquidity and democratize access to real estate, commodities, and other high-value assets through secure, transparent tokenization on Hyperledger Fabric.
+                IME Capital Trust unlocks liquidity and democratizes access to real estate, commodities, and other high-value assets through secure, transparent tokenization on Hyperledger Fabric.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
@@ -431,7 +436,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">IMEC Capital</h3>
+              <h3 className="text-xl font-bold mb-4">IME Capital Trust</h3>
               <p className="text-gray-400">Tokenizing real-world assets for the future of finance</p>
             </div>
 
@@ -449,7 +454,7 @@ export default function LandingPage() {
               <h4 className="text-lg font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-gray-400">
                 <li><a href="#about" className="hover:text-white transition">About Us</a></li>
-                <li><a href="#" className="hover:text-white transition">Careers</a></li>
+                <li><a href="/careers" className="hover:text-white transition">Careers</a></li>
                 <li><a href="#" className="hover:text-white transition">Blog</a></li>
                 <li><a href="#contact" className="hover:text-white transition">Contact</a></li>
               </ul>
@@ -458,16 +463,16 @@ export default function LandingPage() {
             <div>
               <h4 className="text-lg font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition">Compliance</a></li>
-                <li><a href="#" className="hover:text-white transition">Security</a></li>
+                <li><a href="/privacy-policy" className="hover:text-white transition">Privacy Policy</a></li>
+                <li><a href="/terms-of-service" className="hover:text-white transition">Terms of Service</a></li>
+                <li><a href="/compliance" className="hover:text-white transition">Compliance</a></li>
+                <li><a href="/security" className="hover:text-white transition">Security</a></li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
-            <p>© 2025 IMEC Capital Tokenization. All rights reserved.</p>
+            <p>© 2025 IME Capital Trust. All rights reserved.</p>
             <p className="mt-2 text-sm">Built on Hyperledger Fabric 2.2+ Blockchain</p>
           </div>
         </div>
