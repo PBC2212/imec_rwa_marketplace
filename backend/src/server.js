@@ -14,6 +14,7 @@ const errorHandler = require('./middleware/errorHandler');
 const publicRoutes = require('./routes/public');
 const adminRoutes = require('./routes/admin');
 const investorRoutes = require('./routes/investor');
+const spydraRoutes = require('./routes/spydra');
 
 // Initialize Express app
 const app = express();
@@ -45,6 +46,7 @@ app.get('/health', (req, res) => {
 app.use('/api', publicRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/investor', investorRoutes);
+app.use('/api/spydra', spydraRoutes);
 
 // 404 handler
 app.use((req, res) => {
