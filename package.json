@@ -1,0 +1,47 @@
+{
+  "name": "imec-rwa-marketplace",
+  "version": "1.0.0",
+  "description": "Complete RWA Tokenization Marketplace with Hyperledger Fabric Integration",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd backend && npm install && cd ../frontend && npm install && npm run build",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "sync": "cd backend && npm run sync",
+    "enroll-admin": "cd backend && npm run enroll-admin",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop all",
+    "pm2:restart": "pm2 restart all",
+    "pm2:logs": "pm2 logs"
+  },
+  "keywords": [
+    "rwa",
+    "tokenization",
+    "hyperledger-fabric",
+    "blockchain",
+    "marketplace",
+    "real-world-assets",
+    "web3"
+  ],
+  "author": "IMEC",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

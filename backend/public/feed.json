@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "network": "IMEC Token Network",
+  "platform": "Hyperledger Fabric 2.5.0",
+  "stats": {
+    "totalAssets": 0,
+    "totalTokens": 0,
+    "totalMarketCap": 0,
+    "totalSupply": 0,
+    "lastUpdated": "2025-01-01T00:00:00Z"
+  },
+  "assets": [],
+  "tokens": [],
+  "generatedAt": "2025-01-01T00:00:00Z"
+}
