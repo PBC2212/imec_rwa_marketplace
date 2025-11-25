@@ -6,6 +6,8 @@ import LoginModal from '@/components/LoginModal';
 import { api } from '@/lib/api';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 export default function LandingPage() {
   const [stats, setStats] = useState<any>(null);
   const [assets, setAssets] = useState<any[]>([]);

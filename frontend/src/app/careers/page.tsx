@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
+export const dynamic = 'force-dynamic';
+
 export default function Careers() {
   const [selectedDepartment, setSelectedDepartment] = useState('all');
 

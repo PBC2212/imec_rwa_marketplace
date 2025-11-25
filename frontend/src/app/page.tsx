@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import LoginModal from '@/components/LoginModal';
 
+export const dynamic = 'force-dynamic';
+
 export default function LandingPage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginType, setLoginType] = useState<'user' | 'admin' | 'investor'>('investor');

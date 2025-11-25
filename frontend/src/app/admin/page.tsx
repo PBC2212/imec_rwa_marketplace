@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import { formatCurrency, formatDate, getStatusColor } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminDashboard() {
   const [assets, setAssets] = useState<any[]>([]);
   const [tokens, setTokens] = useState<any[]>([]);
