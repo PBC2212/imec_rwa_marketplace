@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import LoginModal from '@/components/LoginModal';
 import { api } from '@/lib/api';
+import { formatCurrency, formatNumber } from '@/lib/utils';
 
 export default function LandingPage() {
   const [stats, setStats] = useState<any>(null);
